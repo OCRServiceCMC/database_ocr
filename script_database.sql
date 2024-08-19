@@ -137,7 +137,7 @@ CREATE TABLE [UploadedFiles] (
 );
 
 CREATE TABLE [PdfFile](
-  [PdfFileID] **BIGINT** PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
+  [PdfFileID] BIGINT PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
   [FileID] INT NOT NULL,
   [FileName] NVARCHAR(255),
   [Status] NVARCHAR(50),
@@ -146,8 +146,8 @@ CREATE TABLE [PdfFile](
 );
 
 CREATE TABLE [PdfPage](
-  [PdfPageID] **BIGINT** PRIMARY KEY IDENTITY(1,1), -- Giữ nguyên kiểu dữ liệu BIGINT để phù hợp với PdfFileID trong bảng PdfFile
-  [PdfFileID] **BIGINT** NOT NULL, -- Đảm bảo kiểu dữ liệu đồng nhất với PdfFile.PdfFileID
+  [PdfPageID] BIGINT PRIMARY KEY IDENTITY(1,1), -- Giữ nguyên kiểu dữ liệu BIGINT để phù hợp với PdfFileID trong bảng PdfFile
+  [PdfFileID] BIGINT NOT NULL, -- Đảm bảo kiểu dữ liệu đồng nhất với PdfFile.PdfFileID
   [PageNumber] INT,
   [Data] VARBINARY,
   [ProcessedData] VARBINARY(MAX),
