@@ -156,12 +156,14 @@ CREATE TABLE [PdfPage](
 CREATE TABLE [ProcessingLogs] (
   [LogID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng nhật ký xử lý
   [FileID] INT NOT NULL, -- ID của file đã được xử lý
+  [UserID] INT NOT NULL,
   [ActionType] NVARCHAR(100) NOT NULL, -- Loại hành động xử lý (e.g., OCR, Rotate)
   [ActionDetails] NVARCHAR(1000) NULL, -- Chi tiết về hành động xử lý
   [ActionDate] DATETIME DEFAULT GETDATE(), -- Ngày thực hiện hành động xử lý
   [IsSuccess] BIT DEFAULT 1, -- Trạng thái thành công hay thất bại của hành động (1: Thành công, 0: Thất bại)
   [ErrorMessage] NVARCHAR(1000) NULL, -- Thông báo lỗi nếu có
-  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng UploadedFiles
+  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng UploadedFiles
+  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE NO ACTION -- Khóa ngoại liên kết với bảng UploadedFiles
 );
 
 -- Tạo bảng RecognizedTexts để lưu trữ văn bản được nhận dạng từ file
