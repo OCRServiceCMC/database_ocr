@@ -127,6 +127,7 @@ CREATE TABLE [UploadedFiles] (
   [FileName] NVARCHAR(255) NOT NULL, -- Tên file được upload
   [FileType] NVARCHAR(50) CHECK (FileType IN ('PDF', 'JPG', 'PNG')) NOT NULL, -- Loại file (PDF, JPG, PNG)
   [FileSize] BIGINT NOT NULL, -- Kích thước file (tính theo byte)
+  [FilePath] NVARCHAR(255),
   [UploadDate] DATETIME DEFAULT GETDATE(), -- Ngày file được upload
   [Processed] BIT DEFAULT 0, -- Trạng thái file đã được xử lý hay chưa (1: Đã xử lý, 0: Chưa xử lý)
   [ProcessedDate] DATETIME NULL, -- Ngày file được xử lý
