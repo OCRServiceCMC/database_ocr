@@ -430,3 +430,9 @@ CREATE TABLE [Payments] (
   [CreatedDate] DATETIME DEFAULT GETDATE(), -- Ngày tạo giao dịch thanh toán
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Users
 );
+
+CREATE TABLE [InvalidTokens] (
+    [ID] BIGINT PRIMARY KEY IDENTITY(1,1),
+    [Token] VARCHAR(500) NOT NULL,
+    [ExpirationDate] DATETIME NOT NULL
+);
