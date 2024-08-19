@@ -136,23 +136,21 @@ CREATE TABLE [UploadedFiles] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Users
 );
 
--- Tạo bảng PdfFile để lưu thông tin các file PDF
 CREATE TABLE [PdfFile](
-  [PdfFileID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho file PDF
-  [FileID] INT NOT NULL, -- ID của file liên kết
-  [FileName] NVARCHAR(255), -- Tên file
-  [Status] NVARCHAR(50), -- Trạng thái file PDF
-  [ProcessedDate] DATETIME NULL, -- Ngày xử lý file PDF
+  [PdfFileID] **BIGINT** PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
+  [FileID] INT NOT NULL,
+  [FileName] NVARCHAR(255),
+  [Status] NVARCHAR(50),
+  [ProcessedDate] DATETIME NULL, -- Ngày xử lý trang
   FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng UploadedFiles
 );
 
--- Tạo bảng PdfPage để lưu thông tin các trang trong file PDF
 CREATE TABLE [PdfPage](
-  [PdfPageID] BIGINT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho mỗi trang PDF
-  [PdfFileID] BIGINT NOT NULL, -- ID của file PDF liên kết
-  [PageNumber] INT, -- Số trang
-  [Data] VARBINARY, -- Dữ liệu trang
-  [ProcessedData] VARBINARY(MAX), -- Dữ liệu sau khi xử lý trang
+  [PdfPageID] **BIGINT** PRIMARY KEY IDENTITY(1,1), -- Giữ nguyên kiểu dữ liệu BIGINT để phù hợp với PdfFileID trong bảng PdfFile
+  [PdfFileID] **BIGINT** NOT NULL, -- Đảm bảo kiểu dữ liệu đồng nhất với PdfFile.PdfFileID
+  [PageNumber] INT,
+  [Data] VARBINARY,
+  [ProcessedData] VARBINARY(MAX),
   FOREIGN KEY ([PdfFileID]) REFERENCES [PdfFile]([PdfFileID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng PdfFile
 );
 
