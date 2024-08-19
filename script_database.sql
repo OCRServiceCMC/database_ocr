@@ -1,6 +1,3 @@
--- Tạo database mới
-CREATE DATABASE OCR_ServiceDB;
-
 -- Sử dụng database vừa tạo
 USE OCR_ServiceDB;
 
@@ -200,9 +197,9 @@ CREATE TABLE [FolderUploads] (
 CREATE TABLE [FolderFiles] (
   [FolderFileID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng file trong thư mục
   [FolderID] INT NOT NULL, -- ID của thư mục chứa file
-  [FileID] INT NULL, -- ID của file trong thư mục, cho phép NULL khi xóa
-  FOREIGN KEY ([FolderID]) REFERENCES [FolderUploads]([FolderID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng FolderUploads
-  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL -- Đặt giá trị NULL khi xóa để tránh multiple cascade paths
+  [FileID] INT NOT NULL, -- ID của file trong thư mục
+  FOREIGN KEY ([FolderID]) REFERENCES [FolderUploads]([FolderID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng FolderUploads, giữ lại CASCADE
+  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE NO ACTION -- Thay đổi thành NO ACTION để tránh multiple cascade paths
 );
 
 -- Tạo bảng Document để lưu trữ thông tin tài liệu
@@ -214,8 +211,8 @@ CREATE TABLE [Document] (
   [DocumentType] NVARCHAR(50) NOT NULL, -- Loại tài liệu (e.g., PDF, DOCX)
   [UploadDate] DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày tạo tài liệu
   [Status] NVARCHAR(50) NOT NULL, -- Trạng thái của tài liệu (e.g., Active, Inactive)
-  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
-  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL -- Khóa ngoại liên kết với bảng UploadedFiles
+  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]), -- Khóa ngoại liên kết với bảng Users
+  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE NO ACTION -- Tránh multiple cascade paths bằng cách sử dụng NO ACTION
 );
 
 -- Tạo bảng UserActions để lưu trữ các hành động của người dùng trên tài liệu
@@ -260,13 +257,13 @@ CREATE TABLE [FileConversions] (
   [DocumentID] INT NOT NULL, -- ID của tài liệu liên quan đến chuyển đổi file
   [UserID] INT NOT NULL, -- ID của người dùng thực hiện chuyển đổi
   [TargetFormat] NVARCHAR(50) NOT NULL CHECK (TargetFormat IN ('JPG', 'PDF', 'DOCX', 'XLSX')), -- Định dạng mục tiêu của file sau khi chuyển đổi
-  [ConversionStatus] NVARCHAR(50) DEFAULT 'Pending' CHECK (ConversionStatus IN ('Pending', 'In Progress', 'Completed', 'Failed')), -- Trạng thái chuyển đổi (Pending, In Progress, Completed, Failed)
+  [ConversionStatus] NVARCHAR(50) DEFAULT 'Pending' CHECK (ConversionStatus IN ('Pending', 'In Progress', 'Completed', 'Failed')), -- Trạng thái chuyển đổi
   [ConversionDate] DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày thực hiện chuyển đổi
   [ResultFileID] INT NULL, -- ID của file kết quả sau khi chuyển đổi (nếu có)
   [ErrorMessage] NVARCHAR(1000) NULL, -- Thông báo lỗi nếu có
-  FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Document
-  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
-  FOREIGN KEY ([ResultFileID]) REFERENCES [Document]([DocumentID]) ON DELETE SET NULL -- Khóa ngoại liên kết với bảng Document
+  FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]), -- Khóa ngoại liên kết với bảng Document
+  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]), -- Khóa ngoại liên kết với bảng Users
+  FOREIGN KEY ([ResultFileID]) REFERENCES [Document]([DocumentID]) ON DELETE NO ACTION -- Thay đổi thành NO ACTION để tránh multiple cascade paths
 );
 
 -- Tạo bảng OCRRequests để lưu trữ thông tin yêu cầu OCR
@@ -403,8 +400,8 @@ CREATE TABLE [Transactions] (
   [FileSizeInBytes] BIGINT, -- Kích thước file liên quan đến giao dịch (nếu có)
   [FilePath] NVARCHAR(255), -- Đường dẫn đến file gốc liên quan đến giao dịch (nếu có)
   [ResultFilePath] NVARCHAR(255), -- Đường dẫn đến file kết quả liên quan đến giao dịch (nếu có)
-  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
-  FOREIGN KEY ([RequestID]) REFERENCES [OCRRequests]([RequestID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng OCRRequests
+  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]), -- Khóa ngoại liên kết với bảng Users
+  FOREIGN KEY ([RequestID]) REFERENCES [OCRRequests]([RequestID]) ON DELETE NO ACTION -- Thay đổi thành NO ACTION để tránh multiple cascade paths
 );
 
 -- Tạo bảng GPTransactions để lưu trữ thông tin giao dịch GP
