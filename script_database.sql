@@ -200,9 +200,9 @@ CREATE TABLE [FolderUploads] (
 CREATE TABLE [FolderFiles] (
   [FolderFileID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng file trong thư mục
   [FolderID] INT NOT NULL, -- ID của thư mục chứa file
-  [FileID] INT NOT NULL, -- ID của file trong thư mục
+  [FileID] INT NULL, -- ID của file trong thư mục, cho phép NULL khi xóa
   FOREIGN KEY ([FolderID]) REFERENCES [FolderUploads]([FolderID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng FolderUploads
-  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng UploadedFiles
+  FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL -- Đặt giá trị NULL khi xóa để tránh multiple cascade paths
 );
 
 -- Tạo bảng Document để lưu trữ thông tin tài liệu
