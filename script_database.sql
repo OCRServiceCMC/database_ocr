@@ -415,7 +415,7 @@ CREATE TABLE [Transactions] (
 CREATE TABLE [GPTransactions] (
   [GPTransactionID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho mỗi giao dịch GP
   [UserID] INT NOT NULL, -- ID của người dùng thực hiện giao dịch GP
-  [PackageID] INT NOT NULL, -- ID của gói dịch vụ liên quan đến giao dịch GP
+  [CurrentGP] INT NOT NULL DEFAULT 100,
   [GPUsed] INT NOT NULL, -- Số lượng GP đã sử dụng trong giao dịch
   [TransactionDate] DATETIME DEFAULT GETDATE(), -- Ngày thực hiện giao dịch GP
   [TransactionStatus] NVARCHAR(50) NOT NULL CHECK (TransactionStatus IN ('Success', 'Failed')), -- Trạng thái giao dịch GP (Success, Failed)
