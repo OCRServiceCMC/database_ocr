@@ -134,6 +134,10 @@ CREATE TABLE [UploadedFiles] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Users
 );
 
+ALTER TABLE [UploadedFiles] DROP CONSTRAINT CK__UploadedF__FileT__656C112C;
+ALTER TABLE [UploadedFiles] ADD CONSTRAINT CK__UploadedF__FileT__656C112C
+CHECK (FileType IN ('PDF', 'JPG', 'PNG'));
+
 CREATE TABLE [PdfFile](
   [PdfFileID] BIGINT PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
   [FileID] INT NOT NULL,
