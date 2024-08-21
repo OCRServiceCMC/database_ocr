@@ -139,6 +139,7 @@ CREATE TABLE [UploadedFiles] (
 ALTER TABLE [UploadedFiles] DROP CONSTRAINT CK__UploadedF__FileT__656C112C;
 ALTER TABLE [UploadedFiles] ADD CONSTRAINT CK__UploadedF__FileT__656C112C
 CHECK (FileType IN ('PDF', 'JPG', 'PNG'));
+ALTER TABLE [UploadedFiles] ADD [Thumbnail] NVACHAR(MAX) NULL;
 
 CREATE TABLE [PdfFile](
   [PdfFileID] BIGINT PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
@@ -236,7 +237,7 @@ CREATE TABLE [UserActions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Document
 );
-
+F
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
 CREATE TABLE [PDFOperationsLog] (
   [OperationID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng nhật ký thao tác PDF
