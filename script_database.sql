@@ -220,6 +220,7 @@ CREATE TABLE [Document] (
   [DocumentType] NVARCHAR(50) NOT NULL, -- Loại tài liệu (e.g., PDF, DOCX)
   [UploadDate] DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày tạo tài liệu
   [Status] NVARCHAR(50) NOT NULL, -- Trạng thái của tài liệu (e.g., Active, Inactive)
+  [Base64] NVARCHAR(MAX),
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]), -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE NO ACTION -- Tránh multiple cascade paths bằng cách sử dụng NO ACTION
 );
