@@ -127,6 +127,7 @@ CREATE TABLE [UploadedFiles] (
   [UserID] INT NOT NULL, -- ID của người dùng upload file
   [FileName] NVARCHAR(255) NOT NULL, -- Tên file được upload
   [FileType] NVARCHAR(50) CHECK (FileType IN ('PDF', 'JPG', 'PNG')) NOT NULL, -- Loại file (PDF, JPG, PNG)
+  [Base64] NVARCHAR(MAX),
   [FileSize] BIGINT NOT NULL, -- Kích thước file (tính theo byte)
   [FilePath] NVARCHAR(255),
   [UploadDate] DATETIME DEFAULT GETDATE(), -- Ngày file được upload
@@ -429,13 +430,6 @@ ALTER TABLE [GPTransactions] DROP CONSTRAINT FK__GPTransac__Packa__662B2B3B;
 
 -- Drop the PackageID column
 ALTER TABLE [GPTransactions] DROP COLUMN [PackageID];
-
--- Thêm cột
--- Add the new CurrentGP column with a default value of 100
-ALTER TABLE [GPTransactions] 
-ADD [CurrentGP] INT NOT NULL DEFAULT 100;
-
-
 
 -- Tạo bảng Payments để lưu trữ thông tin thanh toán
 CREATE TABLE [Payments] (
