@@ -415,6 +415,7 @@ CREATE TABLE [Transactions] (
 CREATE TABLE [GPTransactions] (
   [GPTransactionID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho mỗi giao dịch GP
   [UserID] INT NOT NULL, -- ID của người dùng thực hiện giao dịch GP
+  [PackageID] INT NOT NULL, -- ID của gói dịch vụ liên quan đến giao dịch GP
   [CurrentGP] INT NOT NULL DEFAULT 100,
   [GPUsed] INT NOT NULL, -- Số lượng GP đã sử dụng trong giao dịch
   [TransactionDate] DATETIME DEFAULT GETDATE(), -- Ngày thực hiện giao dịch GP
@@ -422,6 +423,19 @@ CREATE TABLE [GPTransactions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([PackageID]) REFERENCES [ServicePackages]([PackageID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng ServicePackages
 );
+
+-- Drop the foreign key constraint on PackageID
+ALTER TABLE [GPTransactions] DROP CONSTRAINT FK__GPTransac__Packa__662B2B3B;
+
+-- Drop the PackageID column
+ALTER TABLE [GPTransactions] DROP COLUMN [PackageID];
+
+-- Thêm cột
+-- Add the new CurrentGP column with a default value of 100
+ALTER TABLE [GPTransactions] 
+ADD [CurrentGP] INT NOT NULL DEFAULT 100;
+
+
 
 -- Tạo bảng Payments để lưu trữ thông tin thanh toán
 CREATE TABLE [Payments] (
