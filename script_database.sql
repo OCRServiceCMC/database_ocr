@@ -7,6 +7,7 @@ CREATE TABLE [Users] (
   [Username] NVARCHAR(50) NOT NULL UNIQUE, -- Tên đăng nhập của người dùng, phải là duy nhất
   [PasswordHash] NVARCHAR(255) NOT NULL, -- Mã băm của mật khẩu
   [Email] NVARCHAR(100) NOT NULL UNIQUE, -- Địa chỉ email của người dùng, phải là duy nhất
+  [CurrentGP] INT NOT NULL DEFAULT 100,
   [Role] NVARCHAR(50) NOT NULL CHECK (Role IN ('ADMIN', 'User', 'Business')), -- Vai trò của người dùng (Admin, User, Business)
   [Status] NVARCHAR(50) NOT NULL CHECK (Status IN ('Active', 'Inactive', 'Locked')), -- Trạng thái tài khoản người dùng (Active, Inactive, Locked)
   [RegistrationDate] DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày đăng ký tài khoản
@@ -416,7 +417,6 @@ CREATE TABLE [GPTransactions] (
   [GPTransactionID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho mỗi giao dịch GP
   [UserID] INT NOT NULL, -- ID của người dùng thực hiện giao dịch GP
   [PackageID] INT NOT NULL, -- ID của gói dịch vụ liên quan đến giao dịch GP
-  [CurrentGP] INT NOT NULL DEFAULT 100,
   [GPUsed] INT NOT NULL, -- Số lượng GP đã sử dụng trong giao dịch
   [TransactionDate] DATETIME DEFAULT GETDATE(), -- Ngày thực hiện giao dịch GP
   [TransactionStatus] NVARCHAR(50) NOT NULL CHECK (TransactionStatus IN ('Success', 'Failed')), -- Trạng thái giao dịch GP (Success, Failed)
