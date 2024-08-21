@@ -237,7 +237,13 @@ CREATE TABLE [UserActions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Document
 );
-F
+ALTER TABLE UserActions 
+DROP CONSTRAINT CK__UserActio__Actio__0A9D95DB;
+
+ALTER TABLE UserActions
+ADD CONSTRAINT CK_UserActions_ActionType
+CHECK (ActionType IN ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage'));
+
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
 CREATE TABLE [PDFOperationsLog] (
   [OperationID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng nhật ký thao tác PDF
