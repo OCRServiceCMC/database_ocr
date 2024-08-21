@@ -241,8 +241,7 @@ ALTER TABLE UserActions
 DROP CONSTRAINT CK__UserActio__Actio__0A9D95DB;
 
 ALTER TABLE UserActions
-ADD CONSTRAINT CK_UserActions_ActionType
-CHECK (ActionType IN ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage'));
+Alter Table UserActions Add Constraint CK_UserActions_ActionType check  (ActionType in ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage', 'ConvertImagetoBase64'))
 
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
 CREATE TABLE [PDFOperationsLog] (
