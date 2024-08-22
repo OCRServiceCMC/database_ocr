@@ -462,6 +462,30 @@ BEGIN
     EXEC('ALTER TABLE Users DROP CONSTRAINT ' + @ConstraintName);
 END
 
+// Đổi kiểu giá trị int -> Bigint bảng GPTransactions
+alter table GPTransactions
+    alter column GPUsed BIGINT not null
+go
+
+// Đổi kiểu giá trị Int -> Bigint trong bảng User
+DECLARE @ConstraintName nvarchar(128);
+
+-- Find the name of the default constraint
+SELECT @ConstraintName = name
+FROM sys.default_constraints
+WHERE parent_object_id = OBJECT_ID('Users')
+AND col_name(parent_object_id, parent_column_id) = 'CurrentGP';
+
+-- Drop the default constraint if it exists
+IF @ConstraintName IS NOT NULL
+BEGIN
+    EXEC('ALTER TABLE Users DROP CONSTRAINT ' + @ConstraintName);
+END
+
+alter table Users
+    alter column CurrentGP BIGINT not null
+go
+
 -- Tạo bảng Payments để lưu trữ thông tin thanh toán
 CREATE TABLE [Payments] (
   [PaymentID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho mỗi lần thanh toán
