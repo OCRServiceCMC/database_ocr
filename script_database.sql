@@ -173,6 +173,9 @@ CREATE TABLE [ProcessingLogs] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE NO ACTION -- Khóa ngoại liên kết với bảng UploadedFiles
 );
 
+ALTER TABLE [ProcessingLogs]
+ALTER COLUMN [FileID] INT NULL;
+
 -- Tạo bảng RecognizedTexts để lưu trữ văn bản được nhận dạng từ file
 CREATE TABLE [RecognizedTexts] (
   [TextID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho văn bản nhận dạng
@@ -438,6 +441,26 @@ ALTER TABLE [GPTransactions] DROP CONSTRAINT FK__GPTransac__Packa__662B2B3B;
 
 -- Drop the PackageID column
 ALTER TABLE [GPTransactions] DROP COLUMN [PackageID];
+
+// Đổi kiểu giá trị int -> Bigint bảng GPTransactions
+alter table GPTransactions
+    alter column GPUsed int not null
+go
+
+// Đổi kiểu giá trị Int -> Bigint trong bảng User
+DECLARE @ConstraintName nvarchar(128);
+
+-- Find the name of the default constraint
+SELECT @ConstraintName = name
+FROM sys.default_constraints
+WHERE parent_object_id = OBJECT_ID('Users')
+AND col_name(parent_object_id, parent_column_id) = 'CurrentGP';
+
+-- Drop the default constraint if it exists
+IF @ConstraintName IS NOT NULL
+BEGIN
+    EXEC('ALTER TABLE Users DROP CONSTRAINT ' + @ConstraintName);
+END
 
 -- Tạo bảng Payments để lưu trữ thông tin thanh toán
 CREATE TABLE [Payments] (
