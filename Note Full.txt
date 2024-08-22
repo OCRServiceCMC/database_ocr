@@ -136,10 +136,9 @@ CREATE TABLE [UploadedFiles] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Users
 );
 
-ALTER TABLE [UploadedFiles] DROP CONSTRAINT CK__UploadedF__FileT__656C112C;
 ALTER TABLE [UploadedFiles] ADD CONSTRAINT CK__UploadedF__FileT__656C112C
 CHECK (FileType IN ('PDF', 'JPG', 'PNG'));
-ALTER TABLE [UploadedFiles] ADD [Thumbnail] NVACHAR(MAX) NULL;
+ALTER TABLE [UploadedFiles] ADD [Thumbnail] NVARCHAR(MAX) NULL;
 
 CREATE TABLE [PdfFile](
   [PdfFileID] BIGINT PRIMARY KEY IDENTITY(1,1), -- Sửa lại kiểu dữ liệu để thống nhất với bảng PdfPage
@@ -240,10 +239,8 @@ CREATE TABLE [UserActions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Document
 );
-ALTER TABLE UserActions 
-DROP CONSTRAINT CK__UserActio__Actio__0A9D95DB;
 
-ALTER TABLE UserActions Add Constraint CK_UserActions_ActionType check  (ActionType in ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage', 'ConvertImagetoBase64'));
+
 
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
 CREATE TABLE [PDFOperationsLog] (
@@ -434,52 +431,6 @@ CREATE TABLE [GPTransactions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([PackageID]) REFERENCES [ServicePackages]([PackageID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng ServicePackages
 );
-
--- Drop the foreign key constraint on PackageID
-ALTER TABLE [GPTransactions] DROP CONSTRAINT FK__GPTransac__Packa__662B2B3B;
-
--- Drop the PackageID column
-ALTER TABLE [GPTransactions] DROP COLUMN [PackageID];
-
-alter table GPTransactions
-    alter column GPUsed int not null
-go
-
-DECLARE @ConstraintName nvarchar(128);
-
--- Find the name of the default constraint
-SELECT @ConstraintName = name
-FROM sys.default_constraints
-WHERE parent_object_id = OBJECT_ID('Users')
-AND col_name(parent_object_id, parent_column_id) = 'CurrentGP';
-
--- Drop the default constraint if it exists
-IF @ConstraintName IS NOT NULL
-BEGIN
-    EXEC('ALTER TABLE Users DROP CONSTRAINT ' + @ConstraintName);
-END
-
-alter table GPTransactions
-    alter column GPUsed BIGINT not null
-go
-
-DECLARE @ConstraintName nvarchar(128);
-
--- Find the name of the default constraint
-SELECT @ConstraintName = name
-FROM sys.default_constraints
-WHERE parent_object_id = OBJECT_ID('Users')
-AND col_name(parent_object_id, parent_column_id) = 'CurrentGP';
-
--- Drop the default constraint if it exists
-IF @ConstraintName IS NOT NULL
-BEGIN
-    EXEC('ALTER TABLE Users DROP CONSTRAINT ' + @ConstraintName);
-END
-
-alter table Users
-    alter column CurrentGP BIGINT not null
-go
 
 -- Tạo bảng Payments để lưu trữ thông tin thanh toán
 CREATE TABLE [Payments] (
