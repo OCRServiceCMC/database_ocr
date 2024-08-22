@@ -225,7 +225,7 @@ CREATE TABLE [Document] (
   [UploadDate] DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày tạo tài liệu
   [Status] NVARCHAR(50) NOT NULL, -- Trạng thái của tài liệu (e.g., Active, Inactive)
   [Base64] NVARCHAR(MAX),
-  [FilePath] NVARCHAR(255) NOT NULL DEFAULT "FILE PATH",
+  [FilePath] NVARCHAR(255) NOT NULL DEFAULT 'FILE PATH',
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]), -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE NO ACTION -- Tránh multiple cascade paths bằng cách sử dụng NO ACTION
 );
@@ -243,8 +243,7 @@ CREATE TABLE [UserActions] (
 ALTER TABLE UserActions 
 DROP CONSTRAINT CK__UserActio__Actio__0A9D95DB;
 
-ALTER TABLE UserActions
-Alter Table UserActions Add Constraint CK_UserActions_ActionType check  (ActionType in ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage', 'ConvertImagetoBase64'))
+ALTER TABLE UserActions Add Constraint CK_UserActions_ActionType check  (ActionType in ('Upload', 'Download', 'Delete', 'ConvertBase64ToPDF', 'ConvertBase64ToImage', 'ConvertImagetoBase64'));
 
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
 CREATE TABLE [PDFOperationsLog] (
@@ -442,12 +441,10 @@ ALTER TABLE [GPTransactions] DROP CONSTRAINT FK__GPTransac__Packa__662B2B3B;
 -- Drop the PackageID column
 ALTER TABLE [GPTransactions] DROP COLUMN [PackageID];
 
-// Đổi kiểu giá trị int -> Bigint bảng GPTransactions
 alter table GPTransactions
     alter column GPUsed int not null
 go
 
-// Đổi kiểu giá trị Int -> Bigint trong bảng User
 DECLARE @ConstraintName nvarchar(128);
 
 -- Find the name of the default constraint
