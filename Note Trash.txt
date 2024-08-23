@@ -48,3 +48,19 @@ END
 alter table Users
     alter column CurrentGP BIGINT not null
 go
+
+-- Đầu tiên, xóa khóa ngoại cũ
+ALTER TABLE [ProcessingLogs] DROP CONSTRAINT FK_ProcessingLogs_FileID;
+
+-- Sau đó, thêm lại khóa ngoại mới với hành vi ON DELETE SET NULL
+ALTER TABLE [ProcessingLogs]
+ADD CONSTRAINT FK_ProcessingLogs_FileID
+FOREIGN KEY ([FileID]) REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL;
+
+
+ALTER TABLE [ProcessingLogs]
+DROP CONSTRAINT FK__Processin__FileI__74AE54BC; -- Replace with the actual constraint name
+
+ALTER TABLE [ProcessingLogs]
+ADD CONSTRAINT FK_ProcessingLogs_FileID FOREIGN KEY ([FileID])
+REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL;

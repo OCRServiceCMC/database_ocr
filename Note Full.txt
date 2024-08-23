@@ -161,7 +161,7 @@ CREATE TABLE [PdfPage](
 -- Tạo bảng ProcessingLogs để lưu trữ thông tin nhật ký xử lý file
 CREATE TABLE [ProcessingLogs] (
   [LogID] INT PRIMARY KEY IDENTITY(1,1), -- ID duy nhất cho từng nhật ký xử lý
-  [FileID] INT NOT NULL, -- ID của file đã được xử lý
+  [FileID] INT ALLOW NULL, -- ID của file đã được xử lý
   [UserID] INT NOT NULL,
   [ActionType] NVARCHAR(100) NOT NULL, -- Loại hành động xử lý (e.g., OCR, Rotate)
   [ActionDetails] NVARCHAR(1000) NULL, -- Chi tiết về hành động xử lý
@@ -174,6 +174,13 @@ CREATE TABLE [ProcessingLogs] (
 
 ALTER TABLE [ProcessingLogs]
 ALTER COLUMN [FileID] INT NULL;
+
+ALTER TABLE [ProcessingLogs]
+DROP CONSTRAINT FK__Processin__FileI__74AE54BC; -- Replace with the actual constraint name
+
+ALTER TABLE [ProcessingLogs]
+ADD CONSTRAINT FK_ProcessingLogs_FileID FOREIGN KEY ([FileID])
+REFERENCES [UploadedFiles]([FileID]) ON DELETE SET NULL;
 
 -- Tạo bảng RecognizedTexts để lưu trữ văn bản được nhận dạng từ file
 CREATE TABLE [RecognizedTexts] (
@@ -239,7 +246,6 @@ CREATE TABLE [UserActions] (
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE, -- Khóa ngoại liên kết với bảng Users
   FOREIGN KEY ([DocumentID]) REFERENCES [Document]([DocumentID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Document
 );
-
 
 
 -- Tạo bảng PDFOperationsLog để lưu trữ các thao tác trên tài liệu PDF
