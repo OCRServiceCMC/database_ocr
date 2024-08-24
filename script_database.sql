@@ -133,6 +133,7 @@ CREATE TABLE [UploadedFiles] (
   [UploadDate] DATETIME DEFAULT GETDATE(), -- Ngày file được upload
   [Processed] BIT DEFAULT 0, -- Trạng thái file đã được xử lý hay chưa (1: Đã xử lý, 0: Chưa xử lý)
   [ProcessedDate] DATETIME NULL, -- Ngày file được xử lý
+  [Thumbnail] NVARCHAR(MAX) NULL, 
   FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE -- Khóa ngoại liên kết với bảng Users
 );
 
