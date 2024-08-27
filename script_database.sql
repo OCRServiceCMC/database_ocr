@@ -501,3 +501,12 @@ CREATE TABLE [InvalidTokens] (
     [Token] VARCHAR(500) NOT NULL,
     [ExpirationDate] DATETIME NOT NULL
 );
+
+-- Create the UserMessages table
+CREATE TABLE [UserMessages] (
+  [MessageID] INT PRIMARY KEY IDENTITY(1,1),  -- Unique ID for each message
+  [UserID] INT NOT NULL,                       -- ID of the user who sent/received the message
+  [Message] NVARCHAR(MAX) NOT NULL,            -- The content of the message
+  [MessageTime] DATETIME DEFAULT GETDATE(),    -- Timestamp when the message was sent
+  FOREIGN KEY ([UserID]) REFERENCES [Users]([UserID]) ON DELETE CASCADE  -- Foreign key linking to Users table
+);
